@@ -88,7 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GUI\gui.cpp" />
+    <ClCompile Include="src\GUI\Application.cpp" />
+    <ClCompile Include="src\GUI\GUI_Setup.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="vendor\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="vendor\imgui\backends\imgui_impl_win32.cpp" />
@@ -99,7 +100,8 @@
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GUI\gui.h" />
+    <ClInclude Include="src\GUI\Application.h" />
+    <ClInclude Include="src\GUI\GUI_Setup.h" />
     <ClInclude Include="vendor\imgui\backends\imgui_impl_dx12.h" />
     <ClInclude Include="vendor\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="vendor\imgui\imconfig.h" />
