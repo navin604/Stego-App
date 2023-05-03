@@ -1,5 +1,5 @@
 #include "GUI_Setup.h"
-#include "Application.h"
+#include "GUI_Components.h"
 
 
 struct FrameContext
@@ -55,14 +55,15 @@ GUI::~GUI()
 
 void GUI::Init()
 {
-	std::cout << "Initializing";
+	
     // Create application window
      //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
+    WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"Stego", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX12 Example", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Stego", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
     this->hwnd = hwnd;
     this->wc = wc;
+
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
     {
@@ -107,6 +108,8 @@ void GUI::Init()
     return;
 }
 
+
+
 void GUI::Run()
 {
 
@@ -120,7 +123,8 @@ void GUI::Run()
 
     // Main loop
     bool done = false;
-
+    PWSTR BaseFilePath = nullptr;
+    PWSTR SecretFilePath = nullptr;
     while (!done)
     {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -145,7 +149,7 @@ void GUI::Run()
 
        
 
-        App::RenderUI();
+        App::RenderUI(BaseFilePath, SecretFilePath);
 
         // Rendering
         render(io, clear_color);
