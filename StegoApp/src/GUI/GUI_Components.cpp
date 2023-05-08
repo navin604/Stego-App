@@ -1,5 +1,6 @@
 #include "GUI_Components.h"
 #include "../Backend/Validation.h"
+#include "../Backend/Utils.h"
 
 
 namespace App
@@ -69,7 +70,9 @@ namespace App
 			} 
 			else if (Validation::check_filesize(BaseFilePath, SecretFilePath, path))
 			{
-				Validation::prep_bits(BaseFilePath, SecretFilePath, path);
+				std::vector<char> bits_to_embed;
+				bits_to_embed = Validation::prep_bits(BaseFilePath, SecretFilePath, path);
+				Stego::embed(bits_to_embed, BaseFilePath, path);
 			}
 			else
 			{

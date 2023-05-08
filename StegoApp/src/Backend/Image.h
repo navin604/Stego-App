@@ -8,4 +8,5 @@ namespace Image {
 	int getBits(PWSTR img);
 	int getWidth(PWSTR img);
 	int getHeight(PWSTR img);
+	cv::Mat getImageObj(PWSTR file);
 }
