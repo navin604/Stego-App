@@ -1,6 +1,6 @@
 #include "Validation.h"
 
-
+#include "Image.h"
 
 
 
@@ -69,6 +69,21 @@ namespace Validation {
         WideCharToMultiByte(CP_UTF8, 0, str, -1, &result[0], len, NULL, NULL);
 
         return result;
+    }
+    bool check_filesize(PWSTR cover, PWSTR secret, char path[])
+    {
+        int bits_to_embed = 32 + 13 + 13 + 32;
+        int cover_bits;
+        int secret_bits;
+        cover_bits = Image::getBits(cover) * 3;
+        
+        secret_bits = Image::getBits(secret);
+        bits_to_embed = bits_to_embed + (secret_bits * 24) + (strlen(path)*8);
+        if (bits_to_embed < cover_bits)
+        {
+            return true;
+        }
+        return false;
     }
 
 }
