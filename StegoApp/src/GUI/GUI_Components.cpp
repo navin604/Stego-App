@@ -7,6 +7,8 @@ namespace App
 	void RenderUI(PWSTR& BaseFilePath, PWSTR& SecretFilePath)
 	{
 		bool show_demo_window = true;
+		bool error = false;
+		bool button_clicked = false;
 		if (show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
 		ImGui::Begin("Image Encoder");
@@ -35,7 +37,7 @@ namespace App
 
 			std::string cover_str = Validation::filename_to_string(BaseFilePath);
 			ImGui::Text("Cover File: %s", cover_str.c_str());
-			std::cout << "File set as" << cover_str.c_str() << std::endl;
+			
 		}
 		else {
 			ImGui::Text("Cover File: None");
@@ -45,7 +47,7 @@ namespace App
 		{ 
 			std::string secret_str = Validation::filename_to_string(SecretFilePath);
 			ImGui::Text("Secret File: %s", secret_str.c_str());
-			std::cout << "File set as" << secret_str.c_str() << std::endl;
+			
 		}
 		else {
 			ImGui::Text("Secret File: None");
@@ -56,11 +58,45 @@ namespace App
 		ImGui::SameLine();
 		ImGui::InputText(" ", path, IM_ARRAYSIZE(path));
 
-		if (ImGui::Button("Encode") and path[0] != '\0') {
-			std::cout << path << std::endl;
+
+
+		if (ImGui::Button("Encode")) 
+		{
+			if (path[0] == '\0' or BaseFilePath == nullptr or SecretFilePath == nullptr)
+			{
+				ImGui::OpenPopup("File Error");
+				
+			} 
+			else if (Validation::check_filesize(BaseFilePath, SecretFilePath, path))
+			{
+				std::cout << "hello";
+			}
+			else
+			{
+				ImGui::OpenPopup("Size Error");
+			}
+			
+
 		}
+
 		
-		ImGui::End();
+		if (ImGui::BeginPopupModal("File Error")) {
+			ImGui::Text("An error has occurred.");
+			ImGui::Text("Please choose a valid file.");
+			if (ImGui::Button("OK")) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("Size Error")) {
+			ImGui::Text("An error has occurred.");
+			ImGui::Text("Cover image is not large enough");
+			if (ImGui::Button("OK")) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}ImGui::End();
 	}
 
 
