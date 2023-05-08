@@ -86,6 +86,44 @@ namespace Validation {
         return false;
     }
 
+
+    void prep_bits(PWSTR cover, PWSTR secret, char path[])
+    {
+        // Vec will contain all bits to be embedded
+        std::vector<char> vec;
+        //Get bits in secret image
+        int secret_bits;
+        secret_bits = Image::getBits(secret) * 24;
+        int n = 32;
+        std::bitset<32> secret_bitset = create_bitset<32>(secret_bits);
+        std::string str_total = secret_bitset.to_string();
+
+        // Add total message size to vector
+        for (int i = 0; i < str_total.length(); i++)
+        {
+            vec.push_back(str_total[i]);
+        }
+        /*for (int i = 0; i < vec.size(); i++)
+        {
+            std::cout << vec[i] << "\n";
+        }*/
+
+
+
+
+
+
+    }
+
+    template <size_t N>
+    std::bitset<N> create_bitset(int bits)
+    {
+        return std::bitset<N> (bits);
+       
+    }
+
+
+
 }
 
 

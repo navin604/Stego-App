@@ -69,7 +69,7 @@ namespace App
 			} 
 			else if (Validation::check_filesize(BaseFilePath, SecretFilePath, path))
 			{
-				std::cout << "hello";
+				Validation::prep_bits(BaseFilePath, SecretFilePath, path);
 			}
 			else
 			{
