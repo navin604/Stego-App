@@ -12,7 +12,8 @@ namespace App
 		bool button_clicked = false;
 		if (show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
-		ImGui::Begin("Image Encoder");
+		ImGui::Begin("Image Handler");
+		ImGui::SeparatorText("Files");
 		if (ImGui::Button("Select Cover Image")) {
 			if (BaseFilePath != nullptr)
 			{
