@@ -5,8 +5,11 @@
 
 
 namespace Image {
-	int getBits(PWSTR img);
-	int getWidth(PWSTR img);
-	int getHeight(PWSTR img);
+	int getBits(PWSTR file);
+	int getWidth(PWSTR file);
+	int getHeight(PWSTR file);
 	cv::Mat getImageObj(PWSTR file);
+	void save_image(char path[], cv::Mat img);
+	cv::Mat open_image(char path[]);
+	cv::Mat create_image(int height, int width);
 }

@@ -90,10 +90,12 @@ namespace Validation {
     std::vector<char> prep_bits(PWSTR cover, PWSTR secret, char path[])
     {
         // Vec will contain all bits to be embedded
+        std::string secret_file_path_str = filename_to_string(secret);
         std::vector<char> vec;
         //Get bits in secret image
         int secret_bits;
         secret_bits = Image::getBits(secret) * 24;
+        std::cout <<  " hiding: " << secret_bits << "\n";
         int n = 32;
         std::bitset<32> secret_bitset(secret_bits);
         std::string str_total = secret_bitset.to_string();
@@ -103,10 +105,7 @@ namespace Validation {
         {
             vec.push_back(str_total[i]);
         }
-        /*for (int i = 0; i < vec.size(); i++)
-        {
-            std::cout << vec[i] << "\n";
-        }*/
+       
 
 
         int width = Image::getWidth(secret);
@@ -123,22 +122,25 @@ namespace Validation {
         {
             vec.push_back(width_b_str[i]);
         }
+
+        std::cout << " width: " << width_b_str.length() << "\n";
         // Add height to vector
         for (int i = 0; i < height_b_str.length(); i++)
         {
             vec.push_back(height_b_str[i]);
         }
-
+        std::cout << " hei: " << height_b_str.length() << "\n";
 
         std::string binary_string;
         
         // Convert each char in file name to binary equiv
-        for (int i = 0; i < strlen(path); i++)
+        for (int i = 0; i < secret_file_path_str.length(); i++)
         {
-            std::bitset<8> byte(path[i]);
+            std::bitset<8> byte(secret_file_path_str[i]);
             binary_string += byte.to_string();
         }
-
+       
+       
         std::bitset<32> filename_bitset(binary_string.length());
 
         std::string filename_bitset_str = filename_bitset.to_string();
@@ -147,12 +149,13 @@ namespace Validation {
         {
             vec.push_back(c);
         }
-
+        std::cout << " name length 32 bit: " << 32 << "\n";
         // Add file name to vec
         for (auto c : binary_string)
         {
             vec.push_back(c);
         }
+        std::cout << " name length: " << binary_string.length() << "\n";
         cv::Mat image = Image::getImageObj(secret);
 
         //Add image to vec
@@ -182,9 +185,14 @@ namespace Validation {
             }
         }
 
+         return vec;
+    }
 
-
-        return vec;
+    int bin_to_int(std::string str)
+    {
+        std::bitset<13> bit_str(str);
+        int value = static_cast<int>(bit_str.to_ulong());
+        return value;
     }
 
     
