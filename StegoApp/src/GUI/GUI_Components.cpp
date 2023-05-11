@@ -55,19 +55,24 @@ namespace App
 			ImGui::SameLine();
 			ImGui::InputText(" ", path, IM_ARRAYSIZE(path));
 
+			ImGui::SeparatorText("Password");
+			static char pass[256] = "";
+			ImGui::Text("Enter Password");
+			ImGui::SameLine();
+			ImGui::InputText("  ", pass, IM_ARRAYSIZE(pass));
 
 
 			if (ImGui::Button("Encode"))
 			{
-				if (path[0] == '\0' or BaseFilePath == nullptr or SecretFilePath == nullptr)
+				if (path[0] == '\0' or BaseFilePath == nullptr or SecretFilePath == nullptr or pass[0] == '\0')
 				{
-					ImGui::OpenPopup("File Error");
+					ImGui::OpenPopup("Input Error");
 
 				}
-				else if (Validation::check_filesize(BaseFilePath, SecretFilePath, path))
+				else if (Validation::check_filesize(BaseFilePath, SecretFilePath, path, pass))
 				{
 					std::vector<char> bits_to_embed;
-					bits_to_embed = Validation::prep_bits(BaseFilePath, SecretFilePath, path);
+					bits_to_embed = Validation::prep_bits(BaseFilePath, SecretFilePath, path, pass);
 					Stego::embed(bits_to_embed, BaseFilePath, path);
 				}
 				else
@@ -77,11 +82,12 @@ namespace App
 
 
 			}
+			
 
 
-			if (ImGui::BeginPopupModal("File Error")) {
+			if (ImGui::BeginPopupModal("Input Error")) {
 				ImGui::Text("An error has occurred.");
-				ImGui::Text("Please choose a valid file path.");
+				ImGui::Text("Ensure files and a password have been entered!");
 				if (ImGui::Button("OK")) {
 					ImGui::CloseCurrentPopup();
 				}
@@ -98,7 +104,7 @@ namespace App
 			}
 		}
 		
-
+		
 
 
 		if (ImGui::CollapsingHeader("Decode Image"))
@@ -107,26 +113,43 @@ namespace App
 			static char output_path[256] = "";
 			ImGui::Text("Image to Decode:");
 			ImGui::SameLine();
-			ImGui::InputText("  ", output_path, IM_ARRAYSIZE(output_path));
+			ImGui::InputText("   ", output_path, IM_ARRAYSIZE(output_path));
+
+
+			ImGui::SeparatorText("Password");
+			static char password[256] = "";
+			ImGui::Text("Enter Password");
+			ImGui::SameLine();
+			ImGui::InputText("    ", password, IM_ARRAYSIZE(password));
 
 			if (ImGui::Button("Decode"))
 			{
-				if (output_path[0] == '\0')
+				if (output_path[0] == '\0' or password[0] == '\0')
 				{
-					ImGui::OpenPopup("File Error");
+					ImGui::OpenPopup("Error");
 
 				}
 				else
 				{
-					Stego::decode(output_path);
+					if (!Stego::decode(output_path, password))
+					{
+						ImGui::OpenPopup("Password");
+					}
+
 				}
-
-
 			}
 
-			if (ImGui::BeginPopupModal("File Error")) {
+			if (ImGui::BeginPopupModal("Error")) {
 				ImGui::Text("An error has occurred.");
-				ImGui::Text("Please choose a valid file path.");
+				ImGui::Text("Please enter a file path and/or password.");
+				if (ImGui::Button("OK")) {
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+			if (ImGui::BeginPopupModal("Password")) {
+				ImGui::Text("An error has occurred.");
+				ImGui::Text("Incorrect Password");
 				if (ImGui::Button("OK")) {
 					ImGui::CloseCurrentPopup();
 				}

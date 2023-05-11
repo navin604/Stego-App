@@ -57,23 +57,21 @@ void Stego::embed(std::vector<char> bits, PWSTR cover_file, char path[])
             // Overwrite current pixel with the pixel
             // containing embedded data
             cover_image.at<cv::Vec3b>(i, j) = Pixel;
-
-
             
         }
         // Check if all bits have been embedded
         if (check == bits.size())
         {
-            std::cout << "\nExiting at " << check;
+            std::cout << "\nFinished embedding, value should match array lengths " << check << "\n";
             break;
         }
     }
     // Save image to file
     Image::save_image(path, cover_image);
-    
+    std::cout << "=--------------------------------------------------\n";
 }
 
-void Stego::decode(char path[])
+int Stego::decode(char path[], char password[])
 {
     // Retrieve image to decode
     cv::Mat stego_image = Image::open_image(path);
@@ -81,11 +79,9 @@ void Stego::decode(char path[])
     // Contains bit strings read from stego_image
     std::map<std::string, std::string> message_strings = {
        {"message_size",""},
-       {"width", ""},
-       {"height", ""},
        {"file_name_size", ""},
        {"file_name", ""},
-       {"image", ""},
+       {"image", ""}
     };
 
     // Specifies at which bit a specific message has been fully
@@ -93,13 +89,9 @@ void Stego::decode(char path[])
     // processing message_size and file_name_size.
     std::map<std::string, int> message_types = {
         {"message_size", 33},
-        {"width", 46},
-        {"height", 59},
-        {"file_name_size", 91},
+        {"file_name_size", 65},
         {"file_name", 0},
         {"image", 0}
-
-
     };
 
     // Specifies which value in message_strings is being processed
@@ -121,7 +113,7 @@ void Stego::decode(char path[])
                 goto end_loop;
             }
 
-            // Get pixel
+            // Get pixels from image
             cv::Vec3b Pixel = stego_image.at<cv::Vec3b>(i, j);
 
             // Extract least significant bit and process
@@ -139,36 +131,25 @@ void Stego::decode(char path[])
 
     // Removes last bit from bit vector as it is not needed
     message_strings["image"].pop_back();
-    std::cout << message_strings["image"].length() << "awdawdwad\n";
-    // Get width and height of embedded image
-    int width = Validation::bin_to_int(message_strings["width"]);
-    int height = Validation::bin_to_int(message_strings["height"]);
+    std::cout << "Image should matchh previous lengths bits " << message_strings["image"].length() << "\n";
+    std::cout << "filename " << message_strings["file_name"] << "\n";
+    std::cout << "msg size 32should match " << message_strings["file_name_size"].length() << "\n";
+    std::cout << "Filename 32 should match " << message_strings["message_size"].length() << "\n";
+   
+    std::string image_bytes = Image::decrypt_image(message_strings["image"], password);
 
-
-
-
-
-    // Create empty black image using data extracted from stego image
-    cv::Mat decoded_image = Image::create_image(height, width);
-
-  
-    // Fill in empty image using bits from image bit string
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
-            // Calculate index of pixel (Taken from opencv documentation)
-            int index = (row * width + col) * 8 * 3;
-
-            // Extract r, g, and b values
-            int r = std::bitset<8>(message_strings["image"].substr(index, 8)).to_ulong();
-            int g = std::bitset<8>(message_strings["image"].substr(index + 8, 8)).to_ulong();
-            int b = std::bitset<8>(message_strings["image"].substr(index + 16, 8)).to_ulong();
-
-            // Set pixel value 
-            decoded_image.at<cv::Vec3b>(row, col) = cv::Vec3b(b, g, r);
-        }
+    // Return if invalid password
+    if (image_bytes.empty())
+    {
+        return 0;
     }
-    cv::imwrite(message_strings["file_name"], decoded_image);
 
+    // Save image
+    std::string ouput_file = std::string("Decoded-") + "" + message_strings["file_name"];
+    std::ofstream out(ouput_file, std::ios::binary);
+    out.write(image_bytes.c_str(), image_bytes.length());
+    out.close();
+    return 1;
 }
 
 
@@ -178,7 +159,7 @@ void Stego::set_file_name(std::map<std::string, std::string>& message_strings)
     // bits represents a character from the filename
     std::string cur = "";
     std::string filename = "";
-
+    std::cout << "filename name size: " << message_strings["file_name"].length() << "\n";
     for (int i = 0; i <= message_strings["file_name"].size(); i++)
     {
         if (i != 0 && i % 8 == 0)
@@ -197,34 +178,19 @@ void Stego::set_file_name(std::map<std::string, std::string>& message_strings)
 }
 
 void Stego::change_type(std::string& current_type, std::map<std::string, std::string>& message_strings, std::map<std::string, int>& message_types, bool& complete) {
+    // This method sets the current task
     if (current_type == "message_size")
     {
         // Finished extracting message_size, set next task
         int size;
         message_types["image"] = std::bitset<32>(message_strings[current_type]).to_ulong();
-        current_type = "width";
-        std::cout << "msg size: " << message_types["image"] << "\n";
-
-    }
-    else if (current_type == "width")
-    {
-        // Finished extracting width of image, set next task
-        int size;
-        size = std::bitset<32>(message_strings[current_type]).to_ulong();
-        std::cout << "width size: " << size << "\n";
-        current_type = "height";
-    }
-    else if (current_type == "height")
-    {
-        // Finished extracting height of image, set next task
-        int size;
-        size = std::bitset<32>(message_strings[current_type]).to_ulong();
-        std::cout << "height size: " << size << "\n";
         current_type = "file_name_size";
+        std::cout << "Image bits: " << message_types["image"] << "\n";
+
     }
     else if (current_type == "file_name_size")
     {
-        // Finished size of file name (length)
+        // Finished extracting size of file name (length)
         int size;
         size = std::bitset<32>(message_strings[current_type]).to_ulong();
         std::cout << "file name size: " << size << "\n";

@@ -55,6 +55,7 @@ GUI::~GUI()
 
 void GUI::Init()
 {
+    // This function contains boilerplate code to initialize the GUI
 	
     // Create application window
      //ImGui_ImplWin32_EnableDpiAwareness();
@@ -112,7 +113,8 @@ void GUI::Init()
 
 void GUI::Run()
 {
-
+    // This function contains boilerplate code to run the GUI via graphics library
+    // Line 154 calls a function which I Created to render my project
    
     ImGuiIO& io = ImGui::GetIO();
     
@@ -148,7 +150,7 @@ void GUI::Run()
         ImGui::NewFrame();
 
        
-
+        // Renders my custom GUI
         App::RenderUI(BaseFilePath, SecretFilePath);
 
         // Rendering
