@@ -58,14 +58,14 @@
       <PreprocessorDefinitions>ImTextureID=ImU64;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>/vendor/cryptopp;src;vendor/cryptopp;vendor/imgui;vendor/imgui/backends;vendor/opencv/build/include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)StegoApp\vendor\cryptopp;$(SolutionDir)StegoApp\vendor\imgui;$(SolutionDir)StegoApp\vendor\imgui\backends;$(SolutionDir)StegoApp\vendor\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>cryptlibd.lib;opencv_world460d.lib;d3d12.lib;d3dcompiler.lib;dxgi.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\navin\Documents\Navin\Code\StegoApp\StegoApp\vendor\cryptopp\x64\Output\Debug;C:\Users\navin\Documents\Navin\Code\StegoApp\StegoApp\vendor\cryptopp\x64\DLL_Output\Debug;C:\Users\navin\Desktop\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)StegoApp\vendor\cryptopp\x64\Output\Debug;$(SolutionDir)StegoApp\vendor\cryptopp\x64\Output\Release;$(SolutionDir)StegoApp\vendor\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
