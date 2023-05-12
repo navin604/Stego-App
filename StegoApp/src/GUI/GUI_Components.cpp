@@ -7,7 +7,24 @@ namespace App
 {
 	void RenderUI(PWSTR& BaseFilePath, PWSTR& SecretFilePath)
 	{
+		// Renders the GUI and calls respective functions
+		// THe required modules specified in the assignment are in the /Backend directory
+
 		ImGui::Begin("Image Handler");
+
+		if (ImGui::CollapsingHeader("Help"))
+		{
+			ImGui::Text("Click on a tab to open/close\n ");
+			ImGui::Text("The cover image must be a BMP file.\n ");
+			ImGui::Text("Due to the use of AES encryption, cover file must be much larger than secret file\n ");
+			ImGui::Text("\"Encode Image\" tab is used to select images and encode data. Password is used for encryption.");
+			ImGui::Text("You must specify a password and output path such as /docs/image.bmp.");
+			ImGui::Text("Full path or relative path is allowed.\n\n");
+			ImGui::Text("\"Decode Image\" tab is used to decode image. You must specify location of stego image and password\n ");
+			
+		}
+
+
 		if (ImGui::CollapsingHeader("Encode Image"))
 		{
 			ImGui::SeparatorText("Files");

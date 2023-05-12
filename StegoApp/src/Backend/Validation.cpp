@@ -27,16 +27,18 @@ namespace Validation {
         int bits_to_embed = 32 + 32;
         int cover_bits;
         int secret_bits;
+        
         std::string filename = filename_to_string(secret);
         //Calculate available bits in cover image
         cover_bits = Image::getBits(cover) * 3;
-        std::cout << "Cover IMage: " << cover_bits << "\n";
+        std::cout << "Cover Image bits: " << cover_bits << "\n";
+       
 
         // Calculate bits required to hold encrypted secret image
         secret_bits = Image::encrypt_image(secret, pass).size();
         std::cout << "Secret image encrypted bit size: " << secret_bits << "\n";
-        std::cout << "filename in bits: " << filename.size() * 8 << "\n";
-        std::cout << "filename " << filename << "\n";
+        std::cout << "Filename in bits: " << filename.size() * 8 << "\n";
+        std::cout << "Filename " << filename << "\n";
 
         bits_to_embed = bits_to_embed + secret_bits + filename.size() * 8;
         std::cout << "Estimate embedding: " << bits_to_embed << "\n";

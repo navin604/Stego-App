@@ -2,6 +2,7 @@
 
 int Image::getBits(PWSTR file)
 {
+    // Retrieves number of pixels in image
     std::string filename = Validation::filename_to_string(file);
     
 	cv::Mat image = cv::imread(filename, cv::IMREAD_COLOR);
@@ -19,7 +20,7 @@ std::vector<bool> Image::encrypt_image(PWSTR file, char pass[])
     std::ifstream image_file(filename, std::ios::binary);
     std::vector<CryptoPP::byte> plaintext_image((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
     image_file.close();
-
+    std::cout << "Secret image without encryption: " << plaintext_image.size() << "\n";
     // Create key and set padding -> https://www.cryptopp.com/wiki/PKCS5_PBKDF2_HMAC
     CryptoPP::byte key[CryptoPP::AES::DEFAULT_KEYLENGTH];
     memset(key, 0x00, CryptoPP::AES::DEFAULT_KEYLENGTH);
