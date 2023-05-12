@@ -1,1 +1,17 @@
+# Steganography GUI Application
+
+## What is it
+This application provides an interface for Least Significant Bit (LSB) Steganography.
+
+## Prerequisites
+
+The following dependencies are required:
+
+- ImGUI (DirectX12 + Win32)
+- CryptoPP
+- OpenCV
+
+CryptoPP and OpenCV lib's are required. I will add scripts to build and move those .lib's into the correct location sometime in the future.
+
+If you happen to manually acquire the required libraries, make the necessary changes to the premake script and run the batch file to generate project files.
 
