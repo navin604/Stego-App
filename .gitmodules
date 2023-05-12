@@ -1,0 +1,3 @@
+[submodule ".\\StegoApp\\vendor\\CryptoPP"]
+	path = .\\StegoApp\\vendor\\CryptoPP
+	url = https://github.com/weidai11/cryptopp
